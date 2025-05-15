@@ -1,4 +1,4 @@
-## 0.0.2 (2025-05-15)
+## 0.0.2
 
 - Update color extension methods for improved hex conversion and opacity handling
 
