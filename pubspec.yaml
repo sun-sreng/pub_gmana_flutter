@@ -1,7 +1,7 @@
 name: gmana_flutter
 description: "A new Flutter package project."
 version: 0.0.1
-homepage:
+repository: https://github.com/sun-sreng/pub_gmana_flutter.git
 
 environment:
   sdk: ^3.7.2
