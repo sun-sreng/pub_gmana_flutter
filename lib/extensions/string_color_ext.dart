@@ -25,8 +25,8 @@ extension StringColorExtension on String {
     return Color(int.parse(hexColor, radix: 16));
   }
 
-  /// Converts a hex string to a [Color] with the specified opacity.
+  /// Converts a hex string to a [Color] with the specified opacity.]
   Color toColorWithOpacity(double opacity) {
-    return toColor().withOpacity(opacity);
+    return toColor().withAlpha((opacity * 255).round());
   }
 }

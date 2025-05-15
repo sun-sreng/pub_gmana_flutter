@@ -37,7 +37,8 @@ extension ColorExtension on Color {
   /// Converts a [Color] to a hex string (e.g., '#FF5500').
   String toHex({bool withHashSign = true}) {
     final String hexString =
-        value.toRadixString(16).padLeft(8, '0').toUpperCase();
+        toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase();
+
     return withHashSign ? '#$hexString'.substring(1) : hexString.substring(2);
   }
 
