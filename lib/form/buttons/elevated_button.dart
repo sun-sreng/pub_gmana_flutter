@@ -16,7 +16,7 @@ class GElevatedButton extends StatelessWidget {
     required this.text,
     this.textStyle,
     this.loadingColor = Colors.white,
-    this.loadingSize = 24,
+    this.loadingSize = 24.0,
   });
 
   @override

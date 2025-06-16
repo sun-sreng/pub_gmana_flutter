@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-abstract class GBaseField extends StatelessWidget {
+/// Configuration for form fields, encapsulating common properties.
+class GFieldConfig {
   final TextEditingController controller;
   final String labelText;
   final String hintText;
@@ -12,19 +13,15 @@ abstract class GBaseField extends StatelessWidget {
   final void Function(String)? onChanged;
   final IconData? prefixIcon;
 
-  const GBaseField({
-    super.key,
+  const GFieldConfig({
     required this.controller,
     required this.labelText,
     this.hintText = '',
-    required this.keyboardType,
+    this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.next,
     this.inputFormatters,
     this.validator,
     this.onChanged,
     this.prefixIcon,
   });
-
-  @override
-  Widget build(BuildContext context);
 }
