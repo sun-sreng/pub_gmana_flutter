@@ -23,7 +23,6 @@ class ThemeModeService {
       icon: Icons.dark_mode,
     ),
   };
-
   factory ThemeModeService() => _instance;
 
   const ThemeModeService._internal();
@@ -53,6 +52,9 @@ class ThemeModeService {
   IconData getIconFromKey(String key) =>
       _themeConfigs[fromKey(key)]?.icon ?? Icons.brightness_6;
 
+  /// Converts a ThemeMode to its key (e.g., ThemeMode.system -> 'system').
+  String getKey(ThemeMode mode) => _themeConfigs[mode]?.key ?? 'system';
+
   /// Converts a ThemeMode to its display label.
   String getLabel(ThemeMode mode) =>
       _themeConfigs[mode]?.label ?? 'System Mode';
@@ -60,6 +62,10 @@ class ThemeModeService {
   /// Converts a string key to its display label.
   String getLabelFromKey(String key) =>
       _themeConfigs[fromKey(key)]?.label ?? 'System Mode';
+
+  /// Returns the list of theme keys (e.g., ['system', 'light', 'dark']).
+  List<String> getThemeKeys() =>
+      _themeConfigs.values.map((config) => config.key).toList();
 }
 
 /// Data class for theme mode configuration.

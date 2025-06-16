@@ -1,5 +1,6 @@
 library;
 
+export 'extensions/color_ext.dart';
 export 'extensions/theme_mode_ext.dart';
 export 'form/base_field.dart';
 export 'form/confirm_password_field.dart';

@@ -32,6 +32,32 @@ class ColorService {
     return hsl.withLightness(newLightness).toColor();
   }
 
+  /// Creates a MaterialColor from a base Color by generating a swatch of shades.
+  ///
+  /// [color]: The base color.
+  /// Returns a MaterialColor with shades from 50 to 900.
+  MaterialColor createMaterialColor(Color color) {
+    final strengths = <double>[0.05];
+    final swatch = <int, Color>{};
+    final r = color.red, g = color.green, b = color.blue;
+
+    for (var i = 1; i < 10; i++) {
+      strengths.add(0.1 * i);
+    }
+
+    for (var strength in strengths) {
+      final ds = 0.5 - strength;
+      swatch[(strength * 1000).round()] = Color.fromRGBO(
+        r + ((ds < 0 ? r : (255 - r)) * ds).round(),
+        g + ((ds < 0 ? g : (255 - g)) * ds).round(),
+        b + ((ds < 0 ? b : (255 - b)) * ds).round(),
+        1.0,
+      );
+    }
+
+    return MaterialColor(color.value, swatch);
+  }
+
   /// Gets a contrasting text color (white or black) for readability.
   ///
   /// Returns white for dark colors, black for light colors.

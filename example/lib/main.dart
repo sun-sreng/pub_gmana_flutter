@@ -1,8 +1,6 @@
+import 'package:example/views/color_ext_view.dart';
 import 'package:flutter/material.dart';
 import 'package:gmana_flutter/gmana_flutter.dart';
-
-import 'theme_mode_extensions.dart';
-import 'theme_mode_service.dart';
 
 void main() {
   runApp(const ThemeModeExampleApp());
@@ -27,7 +25,12 @@ class ThemeModeExampleAppState extends State<ThemeModeExampleApp> {
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: _currentThemeMode,
-      home: const ThemeModeHomePage(),
+      // home: const ThemeModeHomePage(),
+      initialRoute: "/",
+      routes: {
+        '/': (context) => const ThemeModeHomePage(),
+        '/color': (context) => const ColorExtensionExampleApp(),
+      },
     );
   }
 
@@ -48,19 +51,13 @@ class ThemeModeHomePage extends StatelessWidget {
     // Access the app state to update theme mode
     final appState =
         context.findAncestorStateOfType<ThemeModeExampleAppState>()!;
+    final service = ThemeModeService();
 
     // Available theme mode keys from ThemeModeService
-    final themeKeys =
-        ThemeModeService()._themeConfigs.values
-            .map((config) => config.key)
-            .toList();
+    final themeKeys = service.getThemeKeys();
 
-    // Get current theme mode from the app's theme
-    final currentThemeMode =
-        Theme.of(context).brightness == Brightness.dark &&
-                Theme.of(context).platform != TargetPlatform.iOS
-            ? ThemeMode.dark
-            : ThemeMode.light;
+    // Get current theme mode from the app state
+    final currentThemeMode = appState._currentThemeMode;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Theme Mode Example')),
@@ -78,7 +75,7 @@ class ThemeModeHomePage extends StatelessWidget {
             const SizedBox(height: 32),
             // Dropdown to select theme mode
             DropdownButton<String>(
-              value: ThemeModeService()._themeConfigs[currentThemeMode]?.key,
+              value: service.getKey(currentThemeMode),
               hint: const Text('Select Theme'),
               onChanged: (String? newValue) {
                 if (newValue != null) {
@@ -99,6 +96,13 @@ class ThemeModeHomePage extends StatelessWidget {
                       ),
                     );
                   }).toList(),
+            ),
+            // Button to navigate to ColorExtensionExampleApp
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/color');
+              },
+              child: const Text('Go to Color Extension Example'),
             ),
           ],
         ),
