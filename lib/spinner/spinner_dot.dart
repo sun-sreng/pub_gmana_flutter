@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 
-import 'delay_tween.dart';
+import 'models/delayed_animation_tween.dart';
 
+/// A customizable loading spinner with animated scaling dots.
+///
+/// Example:
+/// ```dart
+/// GSpinnerDot(
+///   size: 50.0,
+///   color: Colors.blue,
+///   dotCount: 3,
+///   duration: Duration(milliseconds: 1200),
+/// )
+/// ```
 class GSpinnerDot extends StatefulWidget {
   final Color? color;
   final double size;
+  final int dotCount;
   final IndexedWidgetBuilder? itemBuilder;
   final Duration duration;
   final AnimationController? controller;
@@ -13,13 +25,14 @@ class GSpinnerDot extends StatefulWidget {
     super.key,
     this.color,
     this.size = 50.0,
+    this.dotCount = 3,
     this.itemBuilder,
-    this.duration = const Duration(milliseconds: 1400),
+    this.duration = const Duration(milliseconds: 1200),
     this.controller,
   }) : assert(
-         !(itemBuilder is IndexedWidgetBuilder && color is Color) &&
-             !(itemBuilder == null && color == null),
-         'You should specify either a itemBuilder or a color',
+         !(itemBuilder != null && color != null) &&
+             (itemBuilder != null || color != null),
+         'Provide either itemBuilder or color, but not both.',
        );
 
   @override
@@ -33,26 +46,37 @@ class _GSpinnerDotState extends State<GSpinnerDot>
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SizedBox.fromSize(
-        size: Size(widget.size * 2, widget.size),
+      child: SizedBox(
+        width: widget.size * 2,
+        height: widget.size,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(3, (i) {
+          children: List.generate(widget.dotCount, (index) {
             return ScaleTransition(
-              scale: DelayTween(
-                begin: 0.0,
-                end: 1.0,
-                delay: i * .2,
+              scale: DelayedAnimationTween(
+                delay: index / widget.dotCount,
               ).animate(_controller),
-              child: SizedBox.fromSize(
-                size: Size.square(widget.size * 0.5),
-                child: _itemBuilder(i),
+              child: SizedBox(
+                width: widget.size * 0.5,
+                height: widget.size * 0.5,
+                child: _buildDot(index),
               ),
             );
           }),
         ),
       ),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Pause animation if widget is not visible
+    if (!mounted || !context.mounted) {
+      _controller.stop();
+    } else {
+      _controller.repeat();
+    }
   }
 
   @override
@@ -72,12 +96,12 @@ class _GSpinnerDotState extends State<GSpinnerDot>
           ..repeat();
   }
 
-  Widget _itemBuilder(int index) {
+  Widget _buildDot(int index) {
     return widget.itemBuilder != null
         ? widget.itemBuilder!(context, index)
         : DecoratedBox(
           decoration: BoxDecoration(
-            color: widget.color,
+            color: widget.color ?? Theme.of(context).colorScheme.primary,
             shape: BoxShape.circle,
           ),
         );

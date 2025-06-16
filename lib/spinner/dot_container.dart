@@ -1,98 +1,71 @@
 import 'package:flutter/material.dart';
 
+import 'models/dot_animation_config.dart';
+
+/// A single animated dot for the SpinnerWaveDot widget.
 class DotContainer extends StatelessWidget {
-  final Interval offsetInterval;
-  final Interval reverseOffsetInterval;
-  final Interval heightInterval;
-  final Interval reverseHeightInterval;
+  final DotAnimationConfig config;
   final double size;
   final Color color;
-  final double maxHeight;
   final AnimationController controller;
 
   const DotContainer({
     super.key,
-    required this.offsetInterval,
-    required this.reverseOffsetInterval,
-    required this.heightInterval,
-    required this.reverseHeightInterval,
+    required this.config,
     required this.size,
     required this.color,
-    required this.maxHeight,
     required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    final double maxDy = -(size * 0.20);
+    final dotSize = size * 0.13;
 
     return AnimatedBuilder(
       animation: controller,
       builder: (_, __) {
-        return Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            Opacity(
-              opacity: controller.value <= offsetInterval.end ? 1 : 0,
-              child: Transform.translate(
-                offset:
-                    Tween<Offset>(begin: Offset.zero, end: Offset(0, maxDy))
-                        .animate(
-                          CurvedAnimation(
-                            parent: controller,
-                            curve: offsetInterval,
-                          ),
-                        )
-                        .value,
-                child: Container(
-                  width: size * 0.13,
-                  height:
-                      Tween<double>(begin: size * 0.13, end: maxHeight)
-                          .animate(
-                            CurvedAnimation(
-                              parent: controller,
-                              curve: heightInterval,
-                            ),
-                          )
-                          .value,
-                  decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: BorderRadius.circular(size),
-                  ),
-                ),
-              ),
+        final isForward = controller.value <= config.offsetInterval.end;
+        final offsetTween = Tween<Offset>(
+          begin: isForward ? Offset.zero : Offset(0, config.maxOffset),
+          end: isForward ? Offset(0, config.maxOffset) : Offset.zero,
+        );
+        final heightTween = Tween<double>(
+          begin: isForward ? dotSize : config.maxHeight,
+          end: isForward ? config.maxHeight : dotSize,
+        );
+
+        return Transform.translate(
+          offset:
+              offsetTween
+                  .animate(
+                    CurvedAnimation(
+                      parent: controller,
+                      curve:
+                          isForward
+                              ? config.offsetInterval
+                              : config.reverseOffsetInterval,
+                    ),
+                  )
+                  .value,
+          child: Container(
+            width: dotSize,
+            height:
+                heightTween
+                    .animate(
+                      CurvedAnimation(
+                        parent: controller,
+                        curve:
+                            isForward
+                                ? config.heightInterval
+                                : config.reverseHeightInterval,
+                      ),
+                    )
+                    .value,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(dotSize / 2),
             ),
-            Opacity(
-              opacity: controller.value >= offsetInterval.end ? 1 : 0,
-              child: Transform.translate(
-                offset:
-                    Tween<Offset>(begin: Offset(0, maxDy), end: Offset.zero)
-                        .animate(
-                          CurvedAnimation(
-                            parent: controller,
-                            curve: reverseOffsetInterval,
-                          ),
-                        )
-                        .value,
-                child: Container(
-                  width: size * 0.13,
-                  height:
-                      Tween<double>(end: size * 0.13, begin: maxHeight)
-                          .animate(
-                            CurvedAnimation(
-                              parent: controller,
-                              curve: reverseHeightInterval,
-                            ),
-                          )
-                          .value,
-                  decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: BorderRadius.circular(size),
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         );
       },
     );

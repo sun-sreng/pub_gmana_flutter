@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'delay_tween.dart';
+import 'models/delayed_animation_tween.dart';
 import 'scale_y_widget.dart';
 
 class SpinKitWave extends StatefulWidget {
@@ -48,7 +48,7 @@ class _SpinKitWaveState extends State<SpinKitWave>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List.generate(bars.length, (i) {
             return ScaleYWidget(
-              scaleY: DelayTween(
+              scaleY: DelayedAnimationTween(
                 begin: .4,
                 end: 1.0,
                 delay: bars[i],

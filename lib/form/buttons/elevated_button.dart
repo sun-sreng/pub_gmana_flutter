@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:gmana_flutter/spinner/spinner_wave_dot.dart';
 
+/// A customizable elevated button with loading state support.
+///
+/// Example:
+/// ```dart
+/// GElevatedButton(
+///   isLoading: true,
+///   onPressed: () {},
+///   text: 'Submit',
+///   loadingColor: Colors.white,
+///   loadingSize: 24.0,
+/// )
+/// ```
 class GElevatedButton extends StatelessWidget {
   final bool isLoading;
   final VoidCallback? onPressed;
@@ -25,7 +37,7 @@ class GElevatedButton extends StatelessWidget {
       onPressed: isLoading ? null : onPressed,
       child:
           isLoading
-              ? SpinnerWaveDot(color: loadingColor, size: loadingSize)
+              ? SpinnerWaveDot(size: loadingSize, color: loadingColor)
               : Text(text, style: textStyle),
     );
   }
