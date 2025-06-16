@@ -1,77 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:gmana_flutter/services/theme_mode_service.dart';
 
+/// Extension on ThemeMode for theme-related utilities.
 extension ThemeModeExt on ThemeMode {
-  IconData toThemeModeIcon() {
-    switch (this) {
-      case ThemeMode.system:
-        return Icons.brightness_6;
-      case ThemeMode.dark:
-        return Icons.dark_mode;
-      case ThemeMode.light:
-        return Icons.light_mode;
-    }
-  }
+  /// Returns the icon for this ThemeMode.
+  IconData toIcon() => ThemeModeService().getIcon(this);
 
-  String toThemeModeKey() {
-    switch (this) {
-      case ThemeMode.system:
-        return 'System';
-      case ThemeMode.dark:
-        return 'Dark Mode';
-      case ThemeMode.light:
-        return 'Light Mode';
-    }
-  }
-
-  String toThemeModeLabel() {
-    switch (this) {
-      case ThemeMode.system:
-        return 'System Mode';
-      case ThemeMode.dark:
-        return 'Dark Mode';
-      case ThemeMode.light:
-        return 'Light Mode';
-    }
-  }
+  /// Returns the display label for this ThemeMode.
+  String toLabel() => ThemeModeService().getLabel(this);
 }
 
+/// Extension on String for theme-related utilities.
 extension ThemeModeStringExt on String {
-  ThemeMode toThemeMode() {
-    switch (this) {
-      case 'system':
-        return ThemeMode.system;
-      case 'dark':
-        return ThemeMode.dark;
-      case 'light':
-        return ThemeMode.light;
-      default:
-        return ThemeMode.system;
-    }
-  }
+  /// Converts a string key to a theme icon.
+  IconData toThemeIcon() => ThemeModeService().getIconFromKey(this);
 
-  IconData toThemeModeIcon() {
-    switch (this) {
-      case 'system':
-        return Icons.brightness_6;
-      case 'dark':
-        return Icons.dark_mode;
-      case 'light':
-        return Icons.light_mode;
-      default:
-        return Icons.brightness_6;
-    }
-  }
+  /// Converts a string key to a theme display label.
+  String toThemeLabel() => ThemeModeService().getLabelFromKey(this);
 
-  String toThemeModeLabel() {
-    switch (this) {
-      case 'system':
-        return 'System Mode';
-      case 'dark':
-        return 'Dark Mode';
-      case 'light':
-        return 'Light Mode';
-      default:
-        return 'System Mode';
-    }
-  }
+  /// Converts a string key to a ThemeMode.
+  ThemeMode toThemeMode() => ThemeModeService().fromKey(this);
 }

@@ -1,50 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:gmana_flutter/services/color_service.dart';
 
-/// Extensions on [Color] for various utility operations
-extension ColorExtension on Color {
-  /// Get contrasting text color (white or black) based on
-  /// this color's luminance
-  Color get contrastText => isDark ? Colors.white : Colors.black;
+/// Extension on [Color] for convenient color manipulation utilities.
+extension ColorExt on Color {
+  /// Gets a contrasting text color (white for dark colors, black for light colors).
+  Color get contrastText => ColorService().getContrastText(this);
 
-  /// Check if this color is dark
-  bool get isDark => computeLuminance() < 0.5;
+  /// Returns true if the color is dark (luminance < 0.5).
+  bool get isDark => ColorService().isDark(this);
 
-  /// Check if this color is light
-  bool get isLight => !isDark;
+  /// Returns true if the color is light (luminance >= 0.5).
+  bool get isLight => ColorService().isLight(this);
 
-  /// Returns a darker version of this color.
-  Color darken([double amount = 0.1]) {
-    assert(amount >= 0 && amount <= 1, 'Amount must be between 0 and 1');
-
-    final hsl = HSLColor.fromColor(this);
-    final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
-
-    return hslDark.toColor();
-  }
-
-  /// Returns a lighter version of this color.
-  Color lighten([double amount = 0.1]) {
-    assert(amount >= 0 && amount <= 1, 'Amount must be between 0 and 1');
-
-    final hsl = HSLColor.fromColor(this);
-    final hslLight = hsl.withLightness(
-      (hsl.lightness + amount).clamp(0.0, 1.0),
+  /// Darkens the color by [amount] (default: 0.1).
+  Color darken([double amount = ColorService.defaultAmount]) {
+    return ColorService().adjustLightness(
+      color: this,
+      amount: amount,
+      darken: true,
     );
-
-    return hslLight.toColor();
   }
 
-  /// Converts a [Color] to a hex string (e.g., '#FF5500').
+  /// Lightens the color by [amount] (default: 0.1).
+  Color lighten([double amount = ColorService.defaultAmount]) {
+    return ColorService().adjustLightness(
+      color: this,
+      amount: amount,
+      darken: false,
+    );
+  }
+
+  /// Converts the color to a hex string (e.g., '#FF5500').
+  ///
+  /// [withHashSign]: If true, includes '#' prefix (default: true).
   String toHex({bool withHashSign = true}) {
-    final String hexString =
-        toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase();
-
-    return withHashSign ? '#$hexString'.substring(1) : hexString.substring(2);
+    return ColorService().toHex(this, withHashSign: withHashSign);
   }
 
-  /// Creates a version of this color with specific opacity.
-  /// More intuitive than the default [withValues] method in some cases.
+  /// Creates a version of the color with the specified opacity.
+  ///
+  /// [opacity]: The opacity value (between 0.0 and 1.0).
   Color withAlphaOpacity(double opacity) {
-    return withAlpha((opacity * 255).round());
+    return ColorService().withAlphaOpacity(this, opacity);
   }
 }
