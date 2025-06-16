@@ -2,13 +2,7 @@ library;
 
 export 'extensions/color_ext.dart';
 export 'extensions/theme_mode_ext.dart';
-export 'form/base_field.dart';
-export 'form/confirm_password_field.dart';
-export 'form/elevated_button.dart';
-export 'form/email_field.dart';
-export 'form/number_field.dart';
-export 'form/password_field.dart';
-export 'form/text_field.dart';
+export 'form/form.dart';
 export 'services/color_service.dart';
 export 'services/theme_mode_service.dart';
 export 'spinner/delay_tween.dart';
