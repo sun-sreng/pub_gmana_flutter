@@ -39,7 +39,9 @@ class ColorService {
   MaterialColor createMaterialColor(Color color) {
     final strengths = <double>[0.05];
     final swatch = <int, Color>{};
-    final r = color.red, g = color.green, b = color.blue;
+    final r = (color.r * 255.0).round() & 0xff;
+    final g = (color.g * 255.0).round() & 0xff;
+    final b = (color.b * 255.0).round() & 0xff;
 
     for (var i = 1; i < 10; i++) {
       strengths.add(0.1 * i);
@@ -55,7 +57,7 @@ class ColorService {
       );
     }
 
-    return MaterialColor(color.value, swatch);
+    return MaterialColor(color.toARGB32(), swatch);
   }
 
   /// Gets a contrasting text color (white or black) for readability.
@@ -81,7 +83,7 @@ class ColorService {
   /// Returns the hex string (e.g., '#FF5500' or 'FF5500').
   String toHex(Color color, {bool withHashSign = true}) {
     final hexString =
-        color.value.toRadixString(16).padLeft(8, '0').toUpperCase();
+        color.toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase();
     return withHashSign ? '#$hexString' : hexString;
   }
 
